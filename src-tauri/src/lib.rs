@@ -1,5 +1,5 @@
-mod commands;
-mod models;
+pub mod commands;
+pub mod models;
 
 use crate::commands::amortization_command::calculate_monthly_payment;
 

@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT * from loans",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Blob",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "date_created",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "date_created"
+          }
+        }
+      },
+      {
+        "name": "date_updated",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "date_updated"
+          }
+        }
+      },
+      {
+        "name": "principal",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "principal"
+          }
+        }
+      },
+      {
+        "name": "rate",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "rate"
+          }
+        }
+      },
+      {
+        "name": "number_of_months",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "number_of_months"
+          }
+        }
+      },
+      {
+        "name": "monthly_payment",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "loans",
+            "name": "monthly_payment"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "acce053c8ac64401914f605e75c10627946c6c57435e58ef4ec6a04a8e8b814d"
+}

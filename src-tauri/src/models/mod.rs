@@ -1,1 +1,1 @@
-mod LoanEntry;
+pub mod loan_entry;
