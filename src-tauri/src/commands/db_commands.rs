@@ -1,11 +1,15 @@
-use crate::models::loan_entry::LoanEntryRow;
+use crate::models::loan_entry::{LoanEntry, LoanEntryRow};
 use crate::AppState;
 
 #[tauri::command]
-async fn command_name(state: tauri::State<'_, AppState>) -> Result<(), sqlx::Error> {
+pub async fn get_all_loans(state: tauri::State<'_, AppState>) -> Result<Vec<LoanEntry>, String> {
     let rows = sqlx::query_as!(LoanEntryRow, "SELECT * from loans")
         .fetch_all(&state.db)
-        .await?;
+        .await
+        .map_err(|e| e.to_string())?;
 
-    Ok(())
+    rows.into_iter()
+        .map(LoanEntry::try_from)
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
 }

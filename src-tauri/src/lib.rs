@@ -1,7 +1,9 @@
 pub mod commands;
 pub mod models;
 
-use crate::commands::amortization_command::calculate_monthly_payment;
+use crate::commands::{
+    amortization_command::calculate_monthly_payment, db_commands::get_all_loans,
+};
 
 use sqlx::sqlite::{SqlitePool, SqlitePoolOptions};
 use std::fs::create_dir_all;
@@ -22,7 +24,11 @@ pub fn run() {
     tauri::Builder::default()
         .setup(setup_app)
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, calculate_monthly_payment])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            calculate_monthly_payment,
+            get_all_loans
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
