@@ -11,7 +11,11 @@
   },
   "dependencies": {
     "@primeuix/themes": "^2.0.3",
+    "@primevue/forms": "^4.5.5",
+    "@tailwindcss/vite": "^4.3.1",
+    "primeicons": "^7.0.0",
     "primevue": "^4.5.5",
+    "tailwindcss": "^4.3.1",
     "vue": "^3.5.13",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2"
