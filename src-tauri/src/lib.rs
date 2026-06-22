@@ -1,15 +1,15 @@
 pub mod commands;
 pub mod models;
 
-use sea_orm::{ConnectOptions, Database};
-use sqlx::sqlite::{SqlitePool, SqlitePoolOptions};
+use migration::{Migrator, MigratorTrait};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::{fs::create_dir_all, time::Duration};
 use tauri::Manager;
 
 use crate::commands::{db_commands, loan_commands};
 
 pub struct AppState {
-    pub db: SqlitePool,
+    pub db: DatabaseConnection,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -18,11 +18,11 @@ pub fn run() {
         .setup(setup_app)
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            db_commands::get_all_loans,
-            db_commands::get_single_loan,
-            db_commands::create_loan,
-            db_commands::update_loan,
-            db_commands::delete_loan,
+            // db_commands::get_all_loans,
+            // db_commands::get_single_loan,
+            // db_commands::create_loan,
+            // db_commands::update_loan,
+            // db_commands::delete_loan,
             loan_commands::calculate_monthly_payment,
         ])
         .run(tauri::generate_context!())
@@ -72,20 +72,17 @@ fn setup_app<R: tauri::Runtime>(app: &mut tauri::App<R>) -> Result<(), Box<dyn s
             db_path.to_string_lossy().replace('\\', "/")
         ));
         opt.max_connections(5).sqlx_logging(false);
-        let db = Database::connect(opt).await.map_err(|e| e.to_string());
-
-        let pool = SqlitePoolOptions::new()
-            .max_connections(6)
-            .connect(&format!("sqlite://{}?mode=rwc", db_path.display()))
+        let db = Database::connect(opt)
             .await
-            .expect("failed to connect to database");
+            .map_err(|e| e.to_string())
+            .unwrap();
 
-        sqlx::migrate!("./migrations")
-            .run(&pool)
+        Migrator::up(&db, None)
             .await
-            .expect("failed to run migrations");
+            .map_err(|e| e.to_string())
+            .unwrap();
 
-        app_handle.manage(AppState { db: pool });
+        app_handle.manage(AppState { db });
     });
     Ok(())
 }
