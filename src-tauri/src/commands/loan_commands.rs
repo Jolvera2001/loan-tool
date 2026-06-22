@@ -9,6 +9,16 @@ pub async fn calculate_monthly_payment(
     calc_amortization(principal, rate, number_of_months)
 }
 
+#[tauri::command]
+pub async fn calculate_time_with_extra_payment(
+    principal: Decimal,
+    rate: Decimal,
+    monthly_payment: Decimal,
+    extra_payment: Decimal,
+) -> Result<Decimal, String> {
+    todo!("Calculate how extra payments affect the time it takes to pay off a loan")
+}
+
 fn calc_amortization(
     principal: Decimal,
     rate: Decimal,

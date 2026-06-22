@@ -1,2 +1,2 @@
-pub mod amortization_command;
+pub mod loan_commands;
 pub mod db_commands;

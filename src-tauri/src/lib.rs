@@ -5,7 +5,7 @@ use sqlx::sqlite::{SqlitePool, SqlitePoolOptions};
 use std::fs::create_dir_all;
 use tauri::Manager;
 
-use crate::commands::{amortization_command, db_commands};
+use crate::commands::{loan_commands, db_commands};
 
 pub struct AppState {
     pub db: SqlitePool,
@@ -18,7 +18,11 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             db_commands::get_all_loans,
-            amortization_command::calculate_monthly_payment,
+            db_commands::get_single_loan,
+            db_commands::create_loan,
+            db_commands::update_loan,
+            db_commands::delete_loan,
+            loan_commands::calculate_monthly_payment,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

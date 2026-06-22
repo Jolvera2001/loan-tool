@@ -17,7 +17,7 @@ pub async fn get_all_loans(state: tauri::State<'_, AppState>) -> Result<Vec<Loan
 }
 
 #[tauri::command]
-async fn get_single_loan(
+pub async fn get_single_loan(
     state: tauri::State<'_, AppState>,
     id: String,
 ) -> Result<LoanEntry, String> {
@@ -33,7 +33,7 @@ async fn get_single_loan(
 }
 
 #[tauri::command]
-async fn create_loan(
+pub async fn create_loan(
     state: tauri::State<'_, AppState>,
     new_entry: LoanEntry,
 ) -> Result<Uuid, String> {
@@ -41,7 +41,7 @@ async fn create_loan(
 }
 
 #[tauri::command]
-async fn update_loan(
+pub async fn update_loan(
     state: tauri::State<'_, AppState>,
     id: String,
     update: LoanEntry,
@@ -50,6 +50,6 @@ async fn update_loan(
 }
 
 #[tauri::command]
-async fn delete_loan(state: tauri::State<'_, AppState>, id: String) -> Result<bool, String> {
+pub async fn delete_loan(state: tauri::State<'_, AppState>, id: String) -> Result<bool, String> {
     Ok(false) // TODO
 }
