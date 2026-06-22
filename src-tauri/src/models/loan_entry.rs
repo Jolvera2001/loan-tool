@@ -15,6 +15,15 @@ pub struct LoanEntry {
     pub monthly_payment: Decimal,
 }
 
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LoanEntryDto {
+    pub principal: Decimal,
+    pub rate: Decimal,
+    pub number_of_months: Decimal,
+    pub monthly_payment: Decimal,
+}
+
 impl TryFrom<LoanEntryRow> for LoanEntry {
     type Error = Box<dyn std::error::Error>;
 

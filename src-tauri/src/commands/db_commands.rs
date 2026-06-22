@@ -1,6 +1,7 @@
+use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
-use crate::models::loan_entry::{LoanEntry, LoanEntryRow};
+use crate::models::loan_entry::{LoanEntry, LoanEntryDto, LoanEntryRow};
 use crate::AppState;
 
 #[tauri::command]
@@ -35,16 +36,37 @@ pub async fn get_single_loan(
 #[tauri::command]
 pub async fn create_loan(
     state: tauri::State<'_, AppState>,
-    new_entry: LoanEntry,
+    new_entry: LoanEntryDto,
 ) -> Result<Uuid, String> {
-    Ok(Uuid::new_v4()) // TODO
+    let id = Uuid::new_v4();
+    let date_now = Utc::now();
+
+    sqlx::query!(
+        "
+    INSERT INTO loans 
+    (id, date_created, date_updated, principal, rate, number_of_months, monthly_payment) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ",
+        id,
+        date_now,
+        date_now,
+        new_entry.principal.to_string(),
+        new_entry.rate.to_string(),
+        new_entry.number_of_months.to_string(),
+        new_entry.monthly_payment.to_string(),
+    )
+    .execute(&state.db)
+    .await
+    .map_err(|e| e.to_string())?;
+
+    Ok(id)
 }
 
 #[tauri::command]
 pub async fn update_loan(
     state: tauri::State<'_, AppState>,
     id: String,
-    update: LoanEntry,
+    update: LoanEntryDto,
 ) -> Result<bool, String> {
     Ok(false) // TODO
 }
