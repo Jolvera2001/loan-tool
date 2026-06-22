@@ -1,5 +1,6 @@
 pub mod commands;
 pub mod models;
+pub mod entity;
 
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
