@@ -1,19 +1,11 @@
 pub mod commands;
 pub mod models;
 
-use crate::commands::{
-    amortization_command::calculate_monthly_payment, db_commands::get_all_loans,
-};
-
 use sqlx::sqlite::{SqlitePool, SqlitePoolOptions};
 use std::fs::create_dir_all;
 use tauri::Manager;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+use crate::commands::{amortization_command, db_commands};
 
 pub struct AppState {
     pub db: SqlitePool,
@@ -25,9 +17,8 @@ pub fn run() {
         .setup(setup_app)
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
-            calculate_monthly_payment,
-            get_all_loans
+            db_commands::get_all_loans,
+            amortization_command::calculate_monthly_payment,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
