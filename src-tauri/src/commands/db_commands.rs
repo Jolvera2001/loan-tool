@@ -5,8 +5,8 @@ use sea_orm::ActiveValue::Set;
 use sea_orm::EntityTrait;
 use uuid::Uuid;
 
+use crate::dtos::loan_dto::LoanDto;
 use crate::entity::loans::{self, Entity as Loan};
-use crate::models::loan_entry::LoanEntryDto;
 use crate::AppState;
 
 #[tauri::command]
@@ -28,10 +28,7 @@ pub async fn get_single_loan(
 }
 
 #[tauri::command]
-pub async fn create_loan(
-    state: tauri::State<'_, AppState>,
-    dto: LoanEntryDto,
-) -> Result<Uuid, String> {
+pub async fn create_loan(state: tauri::State<'_, AppState>, dto: LoanDto) -> Result<Uuid, String> {
     let id = Uuid::new_v4();
     let date_now = Utc::now().naive_utc();
 
@@ -57,7 +54,7 @@ pub async fn create_loan(
 pub async fn update_loan(
     state: tauri::State<'_, AppState>,
     id: Uuid,
-    update: LoanEntryDto,
+    update: LoanDto,
 ) -> Result<Uuid, String> {
     let date_now = Utc::now().naive_utc();
 

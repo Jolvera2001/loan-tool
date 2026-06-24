@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct LoanEntryDto {
+pub struct LoanDto {
     pub principal: Decimal,
     pub rate: Decimal,
     pub number_of_months: Decimal,
