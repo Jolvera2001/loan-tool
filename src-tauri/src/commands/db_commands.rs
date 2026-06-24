@@ -1,4 +1,6 @@
-use chrono::{DateTime, Utc};
+use chrono::Utc;
+use sea_orm::entity::ModelTrait;
+use sea_orm::ActiveModelTrait;
 use sea_orm::ActiveValue::Set;
 use sea_orm::EntityTrait;
 use uuid::Uuid;
@@ -54,13 +56,40 @@ pub async fn create_loan(
 #[tauri::command]
 pub async fn update_loan(
     state: tauri::State<'_, AppState>,
-    id: String,
+    id: Uuid,
     update: LoanEntryDto,
-) -> Result<bool, String> {
-    Ok(false) // TODO
+) -> Result<Uuid, String> {
+    let date_now = Utc::now().naive_utc();
+
+    let mut loan: loans::ActiveModel = Loan::find_by_id(id)
+        .one(&state.db)
+        .await
+        .map_err(|e| e.to_string())?
+        .ok_or_else(|| "Loan not found".to_string())?
+        .into();
+
+    loan.date_updated = Set(date_now);
+    loan.principal = Set(update.principal);
+    loan.rate = Set(update.rate);
+    loan.number_of_months = Set(update.number_of_months);
+    loan.monthly_payment = Set(update.monthly_payment);
+
+    let updated = loan.update(&state.db).await.map_err(|e| e.to_string())?;
+
+    Ok(updated.id)
 }
 
-// #[tauri::command]
-// pub async fn delete_loan(state: tauri::State<'_, AppState>, id: String) -> Result<bool, String> {
-//     Ok(false) // TODO
-// }
+#[tauri::command]
+pub async fn delete_loan(state: tauri::State<'_, AppState>, id: String) -> Result<bool, String> {
+    let real_id = Uuid::parse_str(&id).map_err(|e| e.to_string())?;
+    let loan = Loan::find_by_id(real_id)
+        .one(&state.db)
+        .await
+        .map_err(|e| e.to_string())?
+        .ok_or_else(|| "Loan not found".to_string())?;
+
+    let res = loan.delete(&state.db).await.map_err(|e| e.to_string())?;
+    let check = res.rows_affected > 0;
+
+    Ok(check)
+}
